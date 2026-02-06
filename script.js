@@ -1,83 +1,60 @@
-const dropZone = document.getElementById("drop-zone");
+const fileInput = document.getElementById("fileInput");
 const dashboard = document.getElementById("dashboard");
 
-dropZone.addEventListener("dragover", e => {
-  e.preventDefault();
-  dropZone.classList.add("hover");
-});
-
-dropZone.addEventListener("dragleave", () => {
-  dropZone.classList.remove("hover");
-});
-
-dropZone.addEventListener("drop", e => {
-  e.preventDefault();
-  dropZone.classList.remove("hover");
-
-  const files = [...e.dataTransfer.files].filter(f =>
-    f.name.toLowerCase().endsWith(".csv")
-  );
+fileInput.addEventListener("change", () => {
+  const files = [...fileInput.files].filter(f => f.name.endsWith(".csv"));
 
   if (files.length !== 2) {
-    alert("Drop EXACTLY 2 Ringy CSV files.");
+    alert("You must select EXACTLY 2 CSV files.");
     return;
   }
 
-  Promise.all(files.map(readCSV)).then(allLeads => {
-    const merged = allLeads.flat();
-    renderDashboard(merged);
+  Promise.all(files.map(readCSV)).then(results => {
+    const mergedLeads = results.flat();
+    buildDashboard(mergedLeads);
   });
 });
 
-/* =========================
-   CSV PARSER + NORMALIZER
-========================= */
+/* ========================
+   CSV PARSING (ROBUST)
+======================== */
 
 function readCSV(file) {
   return new Promise(resolve => {
     const reader = new FileReader();
-    reader.onload = e => {
-      const text = e.target.result;
-      resolve(parseCSV(text));
-    };
+    reader.onload = e => resolve(parseCSV(e.target.result));
     reader.readAsText(file);
   });
 }
 
 function normalizeHeader(h) {
-  return h
-    .toLowerCase()
-    .replace(/\ufeff/g, "")
-    .replace(/[^a-z]/g, "");
+  return h.toLowerCase().replace(/[^a-z]/g, "");
 }
 
-function parseCSV(csv) {
-  const rows = csv.split("\n").map(r => r.split(","));
+function parseCSV(text) {
+  const rows = text.split("\n").map(r => r.split(","));
   const rawHeaders = rows.shift();
-
-  const headers = rawHeaders.map(h => normalizeHeader(h));
+  const headers = rawHeaders.map(normalizeHeader);
 
   return rows
     .filter(r => r.length > 3)
     .map(row => {
-      const obj = {};
-      headers.forEach((h, i) => {
-        obj[h] = row[i]?.trim() || "";
-      });
+      const data = {};
+      headers.forEach((h, i) => data[h] = row[i]?.trim() || "");
       return {
-        first: obj.firstname || "",
-        last: obj.lastname || "",
-        phone: obj.phonenumber || obj.phone || "",
-        email: obj.email || "",
-        tags: obj.dispositiontags || obj.disposition || "",
-        notes: obj.notes || obj.note || ""
+        first: data.firstname || "",
+        last: data.lastname || "",
+        phone: data.phonenumber || data.phone || "",
+        email: data.email || "",
+        tags: data.dispositiontags || data.disposition || "",
+        notes: data.notes || data.note || ""
       };
     });
 }
 
-/* =========================
+/* ========================
    TIER DEFINITIONS
-========================= */
+======================== */
 
 const TIERS = [
   {
@@ -92,7 +69,7 @@ const TIERS = [
       "quotes via sms",
       "missed appt",
       "quoted and ghosted",
-      "objection, then sent quote"
+      "objection"
     ]
   },
   {
@@ -122,42 +99,38 @@ const TIERS = [
     tags: [
       "new purchased lead",
       "personal social media leads",
-      "website lead",
-      "red"
+      "website lead"
     ]
   }
 ];
 
-/* =========================
-   CLASSIFICATION + RENDER
-========================= */
+/* ========================
+   DASHBOARD BUILD
+======================== */
 
-function renderDashboard(leads) {
+function buildDashboard(leads) {
   dashboard.innerHTML = "";
 
   const buckets = {};
-  TIERS.forEach(t => (buckets[t.name] = []));
+  TIERS.forEach(t => buckets[t.name] = []);
   const misc = [];
 
   leads.forEach(lead => {
-    const tagString = lead.tags.toLowerCase();
-    let placed = false;
+    const tagText = lead.tags.toLowerCase();
+    let matched = false;
 
     for (const tier of TIERS) {
-      if (tier.tags.some(t => tagString.includes(t))) {
+      if (tier.tags.some(t => tagText.includes(t))) {
         buckets[tier.name].push(lead);
-        placed = true;
+        matched = true;
         break;
       }
     }
 
-    if (!placed) misc.push(lead);
+    if (!matched) misc.push(lead);
   });
 
-  TIERS.forEach(tier => {
-    renderSection(tier.name, tier.color, buckets[tier.name]);
-  });
-
+  TIERS.forEach(t => renderSection(t.name, t.color, buckets[t.name]));
   renderSection("MISC / UNCLASSIFIED", "#ef4444", misc);
 }
 
@@ -166,21 +139,25 @@ function renderSection(title, color, leads) {
 
   const section = document.createElement("section");
 
-  const header = document.createElement("h2");
-  header.textContent = `${title} (${leads.length})`;
+  const header = document.createElement("div");
+  header.className = "section-header";
   header.style.background = color;
+  header.textContent = `${title} (${leads.length})`;
   section.appendChild(header);
 
   leads.forEach(l => {
     const card = document.createElement("div");
     card.className = "lead-card";
+    card.style.borderLeftColor = color;
 
     card.innerHTML = `
-      <strong>${l.first || "No Name"} ${l.last}</strong><br/>
-      ${l.phone}<br/>
-      ${l.email}<br/>
-      <small><strong>Tags:</strong> ${l.tags || "—"}</small>
-      <small><strong>Notes:</strong> ${l.notes || "—"}</small>
+      <strong>${l.first || "No Name"} ${l.last || ""}</strong>
+      <div class="lead-meta">
+        <span>${l.phone}</span>
+        <span>${l.email}</span>
+        <span><strong>Tags:</strong> ${l.tags || "—"}</span>
+        <span><strong>Notes:</strong> ${l.notes || "—"}</span>
+      </div>
     `;
 
     section.appendChild(card);
