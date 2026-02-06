@@ -16,7 +16,7 @@ fileInput.addEventListener("change", () => {
 });
 
 /* ========================
-   CSV PARSING (ROBUST)
+   CSV PARSING
 ======================== */
 
 function readCSV(file) {
