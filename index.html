@@ -6,13 +6,19 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <header>
-    <h1>Lead Command Dashboard</h1>
-    <p>Auto-sorted by priority tier</p>
-  </header>
 
-  <main id="dashboard"></main>
+<header>
+  <h1>Lead Command Dashboard</h1>
+  <p>Drop BOTH Ringy CSV files below</p>
+</header>
 
-  <script src="script.js"></script>
+<section id="drop-zone">
+  <p>Drag & drop CSV files here (2 files)</p>
+  <input type="file" id="fileInput" accept=".csv" multiple />
+</section>
+
+<main id="dashboard"></main>
+
+<script src="script.js"></script>
 </body>
 </html>
