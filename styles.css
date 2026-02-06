@@ -1,82 +1,54 @@
+/* RESET */
+* {
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
 body {
-  font-family: Arial, sans-serif;
-  background: #0f1115;
-  color: #ffffff;
   margin: 0;
   padding: 20px;
+  background: #ffffff; /* ✅ WHITE BACKGROUND */
+  color: #111827;
 }
 
-header {
-  margin-bottom: 20px;
-}
-
+/* DASHBOARD WRAPPER */
 #dashboard {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+  max-width: 1100px;
+  margin: 0 auto;
 }
 
-/* BASE CARD */
-.lead-card {
-  background: #1a1d24;
-  border-left: 8px solid transparent;
+/* SECTION */
+section {
+  margin-bottom: 40px;
+}
+
+/* SECTION BANNER */
+section h2 {
+  margin: 0 0 14px 0;
   padding: 12px 16px;
-  border-radius: 6px;
-}
-
-/* SIZE BY TIER */
-.tier-1 { font-size: 1.15rem; padding: 18px; }
-.tier-2 { font-size: 1.05rem; }
-.tier-3 { font-size: 1rem; }
-.tier-4 { font-size: 0.95rem; }
-.tier-5 { font-size: 0.9rem; opacity: 0.85; }
-
-/* COLORS */
-.tier-1 { border-color: #59E817; }
-.tier-2 { border-color: #0020C2; }
-.tier-3 { border-color: #00BFFF; }
-.tier-4 { border-color: #FFFF33; color: #000; background: #e6e64d; }
-.tier-5 { border-color: #FF2400; }
-
-.name {
-  font-weight: bold;
-  font-size: 1.2em;
-}
-
-.meta {
-  font-size: 0.85em;
-  opacity: 0.85;
-  margin-top: 6px;
-}
-
-.details {
-  display: none;
-  margin-top: 10px;
-  font-size: 0.85em;
-}
-
-.lead-card:hover .details {
-  display: block;
-}
-#drop-zone {
-  border: 2px dashed #555;
-  padding: 30px;
-  text-align: center;
-  margin: 20px;
-}
-
-#drop-zone.hover {
-  border-color: #00BFFF;
-}
-
-.lead-card {
-  padding: 12px;
-  margin: 10px;
+  font-size: 18px;
+  font-weight: 700;
   border-radius: 8px;
+  color: #111;
+  display: flex;
+  align-items: center;
 }
 
-.tier-1 { background: #59E817; font-size: 1.2em; }
-.tier-2 { background: #0020C2; color: #fff; }
-.tier-3 { background: #00BFFF; }
-.tier-4 { background: #FFFF33; }
-.tier-5 { background: #FF2400; color: #fff; }
+/* LEAD CARD */
+section div {
+  background: #f9fafb;
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin-bottom: 10px;
+  box-shadow: 0 1px 2px rgba(0,0,0,.05);
+}
+
+section div strong {
+  font-size: 15px;
+}
+
+section div small {
+  display: block;
+  margin-top: 4px;
+  color: #374151;
+}
