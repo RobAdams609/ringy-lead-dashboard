@@ -18,34 +18,42 @@ h1 {
   background: #fafafa;
 }
 
-/* SECTION */
+/* =====================
+   SECTIONS
+===================== */
 
 section {
-  margin-bottom: 42px;
+  margin-bottom: 48px;
 }
 
 .section-header {
-  padding: 12px 16px;
-  border-radius: 10px;
-  font-weight: 700;
-  margin-bottom: 14px;
+  padding: 14px 18px;
+  border-radius: 12px;
+  font-weight: 800;
+  margin-bottom: 16px;
   color: #000;
+  letter-spacing: 0.3px;
 }
 
-/* LEAD CARD */
+/* =====================
+   LEAD CARDS (BASE)
+===================== */
 
 .lead-card {
   background: #ffffff;
-  border-left: 8px solid #999; /* color injected per tier */
-  padding: 14px 16px;
-  border-radius: 10px;
-  margin-bottom: 12px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  border-left: 8px solid #999;
+  border-radius: 12px;
+  margin-bottom: 14px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+  transition: transform 0.15s ease;
 }
 
-.lead-card strong {
-  font-size: 16px;
-  display: block;
+.lead-card:hover {
+  transform: translateY(-1px);
+}
+
+.lead-name {
+  font-weight: 700;
 }
 
 .lead-meta {
@@ -56,5 +64,63 @@ section {
 
 .lead-meta span {
   display: block;
-  margin-top: 3px;
+  margin-top: 4px;
+}
+
+/* =====================
+   PRIORITY SCALING
+===================== */
+
+/* Tier 1 — NEW MONEY */
+.tier-1 {
+  padding: 20px 22px;
+}
+
+.tier-1 .lead-name {
+  font-size: 20px;
+}
+
+/* Tier 2 — MISSING MONEY */
+.tier-2 {
+  padding: 18px 20px;
+}
+
+.tier-2 .lead-name {
+  font-size: 18px;
+}
+
+/* Tier 3 — MONEY CAN’T HIDE */
+.tier-3 {
+  padding: 16px 18px;
+}
+
+.tier-3 .lead-name {
+  font-size: 17px;
+}
+
+/* Tier 4 — COMING FOR MONEY */
+.tier-4 {
+  padding: 14px 16px;
+}
+
+.tier-4 .lead-name {
+  font-size: 16px;
+}
+
+/* Tier 5 — TODAY’S MONEY */
+.tier-5 {
+  padding: 12px 14px;
+}
+
+.tier-5 .lead-name {
+  font-size: 15px;
+}
+
+/* MISC */
+.tier-misc {
+  padding: 12px 14px;
+}
+
+.tier-misc .lead-name {
+  font-size: 15px;
 }
