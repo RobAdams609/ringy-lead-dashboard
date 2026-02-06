@@ -1,51 +1,83 @@
-fetch("data/ringy_leads.csv")
-  .then(res => res.text())
-  .then(text => {
-    const rows = text.split("\n").slice(1);
-    const leads = rows
-      .map(r => r.split(","))
-      .filter(r => r.length > 5);
+const dropZone = document.getElementById("drop-zone");
+const fileInput = document.getElementById("fileInput");
+const dashboard = document.getElementById("dashboard");
 
-    const dashboard = document.getElementById("dashboard");
+dropZone.addEventListener("dragover", e => {
+  e.preventDefault();
+  dropZone.classList.add("hover");
+});
 
-    leads
-      .map(l => {
-        const [
-          first, last, email, phone, city, state, zip, dob,
-          notes, tags, vendor, lastCalled, callCount, received
-        ] = l;
+dropZone.addEventListener("dragleave", () => {
+  dropZone.classList.remove("hover");
+});
 
-        const tier = getTier(tags || "");
-        return { first, last, email, phone, tags, vendor, lastCalled, notes, tier };
-      })
-      .sort((a, b) => a.tier - b.tier)
-      .forEach(lead => dashboard.appendChild(renderCard(lead)));
-  });
+dropZone.addEventListener("drop", e => {
+  e.preventDefault();
+  dropZone.classList.remove("hover");
+  handleFiles(e.dataTransfer.files);
+});
 
-function getTier(tags) {
-  if (/Appt Set|Quoted w F\/U/i.test(tags)) return 1;
-  if (/Missed Appt|Quoted and Ghosted|Objection then sent Quote|Quotes Via SMS/i.test(tags)) return 2;
-  if (/Hit List\/Ghosted|Manual Added Ghosted/i.test(tags)) return 3;
-  if (/Positive|Auto|Reply|Opened Email|Email Replied|smallBusiness/i.test(tags)) return 4;
-  if (/New Purchased Lead|Personal Social Media Leads|Website Lead/i.test(tags)) return 5;
-  return 6;
+fileInput.addEventListener("change", e => {
+  handleFiles(e.target.files);
+});
+
+function handleFiles(files) {
+  const csvFiles = [...files].filter(f => f.name.endsWith(".csv"));
+  if (csvFiles.length < 2) {
+    alert("Drop BOTH Ringy CSV files.");
+    return;
+  }
+
+  Promise.all(csvFiles.map(readCSV))
+    .then(results => {
+      const combined = results.flat();
+      renderLeads(combined);
+    });
 }
 
-function renderCard(lead) {
-  const card = document.createElement("div");
-  card.className = `lead-card tier-${lead.tier}`;
+function readCSV(file) {
+  return new Promise(resolve => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      const lines = e.target.result.split("\n");
+      const headers = lines.shift().split(",");
+      const rows = lines.map(line => {
+        const values = line.split(",");
+        const obj = {};
+        headers.forEach((h, i) => obj[h.trim()] = values[i]?.trim());
+        return obj;
+      });
+      resolve(rows.filter(r => r["Disposition tags"]));
+    };
+    reader.readAsText(file);
+  });
+}
 
-  card.innerHTML = `
-    <div class="name">${lead.first} ${lead.last}</div>
-    <div>${lead.phone || ""}</div>
-    <div>${lead.email || ""}</div>
-    <div class="meta">Tags: ${lead.tags || ""}</div>
-    <div class="meta">Vendor: ${lead.vendor || ""}</div>
-    <div class="details">
-      <div>Last Called: ${lead.lastCalled || ""}</div>
-      <div>Notes: ${lead.notes || ""}</div>
-    </div>
-  `;
+function getTier(disposition = "") {
+  if (disposition.includes("Appt Set")) return 1;
+  if (disposition.includes("Quoted")) return 2;
+  if (disposition.includes("Hit List")) return 3;
+  if (disposition.includes("Positive")) return 4;
+  return 5;
+}
 
-  return card;
+function renderLeads(leads) {
+  dashboard.innerHTML = "";
+
+  leads
+    .map(l => ({ ...l, tier: getTier(l["Disposition tags"]) }))
+    .sort((a, b) => a.tier - b.tier)
+    .forEach(lead => {
+      const card = document.createElement("div");
+      card.className = `lead-card tier-${lead.tier}`;
+
+      card.innerHTML = `
+        <strong>${lead["First name"] || ""} ${lead["Last name"] || ""}</strong>
+        <div>${lead["Phone number"] || ""}</div>
+        <div>${lead["Email"] || ""}</div>
+        <small>${lead["Disposition tags"]}</small>
+      `;
+
+      dashboard.appendChild(card);
+    });
 }
