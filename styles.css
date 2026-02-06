@@ -58,3 +58,25 @@ header {
 .lead-card:hover .details {
   display: block;
 }
+#drop-zone {
+  border: 2px dashed #555;
+  padding: 30px;
+  text-align: center;
+  margin: 20px;
+}
+
+#drop-zone.hover {
+  border-color: #00BFFF;
+}
+
+.lead-card {
+  padding: 12px;
+  margin: 10px;
+  border-radius: 8px;
+}
+
+.tier-1 { background: #59E817; font-size: 1.2em; }
+.tier-2 { background: #0020C2; color: #fff; }
+.tier-3 { background: #00BFFF; }
+.tier-4 { background: #FFFF33; }
+.tier-5 { background: #FF2400; color: #fff; }
