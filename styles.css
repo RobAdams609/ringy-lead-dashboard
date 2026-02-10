@@ -1,126 +1,221 @@
-body {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-  background: #ffffff;
+:root{
+  --bg: #ffffff;
+  --ink: #0b1220;
+  --muted: #5b667a;
+  --card: #ffffff;
+  --border: #e6eaf2;
+  --shadow: 0 10px 24px rgba(14, 28, 55, 0.08);
+
+  /* Your tier colors */
+  --newMoney: #59E817;        /* bright green */
+  --missingMoney: #0020C2;    /* bright darker blue */
+  --moneyCantHide: #00BFFF;   /* light blue */
+  --comingForMoney: #34C759;  /* slightly darker green */
+  --todaysMoney: #FFFF33;     /* yellow */
+  --misc: #FF2400;            /* red */
+}
+
+*{ box-sizing: border-box; }
+html, body { height: 100%; }
+body{
   margin: 0;
-  padding: 30px;
-  color: #111;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+  background: var(--bg);
+  color: var(--ink);
 }
 
-h1 {
-  margin-bottom: 12px;
+.page{
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 28px 18px 60px;
 }
 
-#drop-zone {
-  border: 2px dashed #d1d5db;
-  padding: 20px;
-  margin-bottom: 30px;
-  border-radius: 12px;
-  background: #fafafa;
+.header h1{
+  margin: 0 0 6px;
+  font-size: 40px;
+  letter-spacing: -0.02em;
+}
+.sub{
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
 }
 
-/* =====================
-   SECTIONS
-===================== */
+.uploader{ margin-top: 18px; }
 
-section {
-  margin-bottom: 48px;
+.dropzone{
+  border: 2px dashed #cfd6e6;
+  border-radius: 16px;
+  padding: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background: #fbfcff;
 }
 
-.section-header {
-  padding: 14px 18px;
-  border-radius: 12px;
-  font-weight: 800;
-  margin-bottom: 16px;
-  color: #000;
-  letter-spacing: 0.3px;
+.dropzone.dragover{
+  border-color: #7aa7ff;
+  background: #f3f7ff;
 }
 
-/* =====================
-   LEAD CARDS (BASE)
-===================== */
-
-.lead-card {
-  background: #ffffff;
-  border-left: 8px solid #999;
-  border-radius: 12px;
-  margin-bottom: 14px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
-  transition: transform 0.15s ease;
-}
-
-.lead-card:hover {
-  transform: translateY(-1px);
-}
-
-.lead-name {
+.dropTitle{
   font-weight: 700;
+  font-size: 14px;
 }
-
-.lead-meta {
-  font-size: 13px;
-  margin-top: 6px;
-  color: #333;
-}
-
-.lead-meta span {
-  display: block;
+.dropHint{
   margin-top: 4px;
+  color: var(--muted);
+  font-size: 12px;
 }
 
-/* =====================
-   PRIORITY SCALING
-===================== */
-
-/* Tier 1 — NEW MONEY */
-.tier-1 {
-  padding: 20px 22px;
+.dropActions{
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
-.tier-1 .lead-name {
-  font-size: 20px;
+.fileBtn{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: #ffffff;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 13px;
+  box-shadow: 0 1px 0 rgba(14,28,55,0.04);
+}
+.fileBtn input{ display: none; }
+
+.fileStatus{
+  color: var(--muted);
+  font-size: 12px;
+  min-width: 140px;
+  text-align: right;
 }
 
-/* Tier 2 — MISSING MONEY */
-.tier-2 {
-  padding: 18px 20px;
+.errorBox{
+  margin-top: 12px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid #ffd2d2;
+  background: #fff5f5;
+  color: #8b1d1d;
+  font-size: 13px;
+}
+.hidden{ display: none; }
+
+.dashboard{
+  margin-top: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
-.tier-2 .lead-name {
-  font-size: 18px;
+.section{
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  overflow: hidden;
+  background: #ffffff;
+  box-shadow: var(--shadow);
 }
 
-/* Tier 3 — MONEY CAN’T HIDE */
-.tier-3 {
-  padding: 16px 18px;
-}
-
-.tier-3 .lead-name {
-  font-size: 17px;
-}
-
-/* Tier 4 — COMING FOR MONEY */
-.tier-4 {
+.sectionHeader{
   padding: 14px 16px;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #0b1220;
 }
 
-.tier-4 .lead-name {
+.sectionHeader .count{
+  font-weight: 800;
+  font-size: 12px;
+  opacity: 0.9;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.55);
+  border: 1px solid rgba(0,0,0,0.06);
+}
+
+.sectionBody{
+  padding: 14px;
+  background: #ffffff;
+}
+
+.cards{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.card{
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 12px 14px;
+  position: relative;
+  overflow: hidden;
+}
+
+.card::before{
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 8px;
+  background: var(--misc);
+  border-top-left-radius: 16px;
+  border-bottom-left-radius: 16px;
+}
+
+.cardHeader{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+  align-items: baseline;
+}
+
+.name{
   font-size: 16px;
+  font-weight: 900;
+}
+.metaLine{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 14px;
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 12px;
 }
 
-/* Tier 5 — TODAY’S MONEY */
-.tier-5 {
-  padding: 12px 14px;
+.kv{
+  margin-top: 8px;
+  font-size: 13px;
+  line-height: 1.3;
+}
+.kv strong{
+  color: #0b1220;
 }
 
-.tier-5 .lead-name {
-  font-size: 15px;
+a.link{
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }
 
-/* MISC */
-.tier-misc {
-  padding: 12px 14px;
+.smallMuted{
+  color: var(--muted);
 }
 
-.tier-misc .lead-name {
-  font-size: 15px;
+@media (max-width: 700px){
+  .dropzone{ flex-direction: column; align-items: stretch; }
+  .dropActions{ justify-content: space-between; width: 100%; }
+  .fileStatus{ text-align: left; }
 }
