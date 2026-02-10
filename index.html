@@ -2,20 +2,37 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Lead Command Dashboard</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+  <div class="page">
+    <header class="header">
+      <h1>Lead Command Dashboard</h1>
+      <p class="sub">Drop BOTH Ringy CSV files below (2 files). Leads auto-sort into your tiers.</p>
+    </header>
 
-  <h1>Lead Command Dashboard</h1>
+    <section class="uploader">
+      <div id="dropZone" class="dropzone" aria-label="CSV Drop Zone">
+        <div class="dropzoneText">
+          <div class="dropTitle">Drag & drop CSV files here (2 files)</div>
+          <div class="dropHint">Or choose both files using the button below</div>
+        </div>
+        <div class="dropActions">
+          <label class="fileBtn">
+            Choose Files
+            <input id="fileInput" type="file" accept=".csv,text/csv" multiple />
+          </label>
+          <div id="fileStatus" class="fileStatus">No files selected</div>
+        </div>
+      </div>
 
-  <div id="drop-zone">
-    <p><strong>Drop BOTH Ringy CSV files below</strong></p>
-    <p>Drag & drop CSV files here (2 files)</p>
-    <input type="file" id="fileInput" multiple accept=".csv" />
+      <div id="errorBox" class="errorBox hidden"></div>
+    </section>
+
+    <main id="dashboard" class="dashboard"></main>
   </div>
-
-  <div id="dashboard"></div>
 
   <script src="script.js"></script>
 </body>
